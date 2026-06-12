@@ -1,0 +1,26 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f59e0b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#d97706;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Outer Circle -->
+  <circle cx="100" cy="100" r="90" fill="url(#goldGrad)" />
+  <circle cx="100" cy="100" r="82" fill="none" stroke="white" stroke-width="2" stroke-dasharray="5,5" />
+  
+  <!-- Pie Base -->
+  <path d="M50 110 Q100 150 150 110 L140 100 L60 100 Z" fill="#92400e" />
+  
+  <!-- Pie Crust Top -->
+  <path d="M45 105 Q100 80 155 105 Q155 115 145 115 L55 115 Q45 115 45 105 Z" fill="#fcd34d" stroke="#b45309" stroke-width="2" />
+  
+  <!-- Steam Lines -->
+  <path d="M85 70 Q90 60 85 50" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" opacity="0.6" />
+  <path d="M100 65 Q105 55 100 45" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" opacity="0.8" />
+  <path d="M115 70 Q120 60 115 50" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" opacity="0.6" />
+  
+  <!-- Border Shine -->
+  <path d="M100 20 A 80 80 0 0 1 180 100" fill="none" stroke="white" stroke-width="4" stroke-linecap="round" opacity="0.3" />
+</svg>

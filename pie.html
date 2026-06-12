@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lemon Meringue Pie | Granny's Pies</title>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        body{
+            font-family:'Inter',sans-serif;
+            overflow-x: hidden;
+        }
+
+        .title-font{
+            font-family:'Playfair Display',serif;
+        }
+
+        .glass{
+            backdrop-filter: blur(15px);
+            background: rgba(255,255,255,0.7);
+        }
+
+        .recipe-gradient {
+            background: linear-gradient(135deg, #fffcf0 0%, #fff9e6 100%);
+        }
+
+        /* Scroll Progress Bar */
+        #scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: #f59e0b;
+            z-index: 100;
+            transition: width 0.1s ease-out;
+        }
+
+        /* Custom Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1s cubic-bezier(0.17, 0.55, 0.55, 1);
+            will-change: opacity, transform;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Delay utilities for staggered reveals */
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+        .delay-400 { transition-delay: 400ms; }
+
+        .navbar-scrolled {
+            @apply py-3 bg-white/95 shadow-md border-b border-amber-100;
+        }
+
+        /* Image Skeleton Loading */
+        .skeleton {
+            position: relative;
+            overflow: hidden;
+            background-color: #e2e8f0;
+        }
+
+        .skeleton::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            transform: translateX(-100%);
+            background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0) 0,
+                rgba(255, 255, 255, 0.2) 20%,
+                rgba(255, 255, 255, 0.5) 60%,
+                rgba(255, 255, 255, 0)
+            );
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        .img-hide {
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .img-show {
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-700">
+
+    <div id="scroll-progress"></div>
+
+    <!-- Navbar -->
+    <nav id="main-nav" class="fixed top-0 left-0 w-full z-50 bg-white/90 backdrop-blur-lg shadow-sm transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center transition-all duration-300" id="nav-container">
+
+            <div class="flex items-center gap-3">
+                <a href="./" class="flex items-center gap-3 group">
+                    <img src="assets/logo.svg" alt="Granny's Pies Logo" class="w-14 h-14 drop-shadow-md group-hover:scale-105 transition">
+                    <div>
+                        <h2 class="title-font text-2xl font-bold text-amber-600 leading-none">
+                            Granny's Pies
+                        </h2>
+                        <span class="text-[10px] uppercase tracking-[0.2em] text-slate-400 font-bold">Homemade Excellence</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex gap-8 font-medium">
+                <a href="./" class="hover:text-amber-600 transition">Home</a>
+                <a href="#ingredients" class="hover:text-amber-600 transition">Ingredients</a>
+                <a href="#steps" class="hover:text-amber-600 transition">Directions</a>
+                <a href="#reviews" class="hover:text-amber-600 transition">Reviews</a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-btn" class="md:hidden text-2xl text-slate-700 focus:outline-none">
+                <i class="fas fa-bars"></i>
+            </button>
+
+        </div>
+    </nav>
+
+    <!-- Mobile Sidebar -->
+    <div id="mobile-sidebar" class="fixed inset-0 z-[60] bg-slate-900/50 backdrop-blur-sm hidden">
+        <div class="fixed right-0 top-0 h-full w-64 bg-white shadow-2xl p-6 transition-transform transform translate-x-full" id="sidebar-content">
+            <div class="flex justify-between items-center mb-10">
+                <h3 class="title-font text-xl font-bold text-amber-600">Menu</h3>
+                <button id="close-sidebar" class="text-2xl text-slate-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="flex flex-col gap-6 font-medium">
+                <a href="./" class="sidebar-link hover:text-amber-600 transition">Home</a>
+                <a href="#ingredients" class="sidebar-link hover:text-amber-600 transition">Ingredients</a>
+                <a href="#steps" class="sidebar-link hover:text-amber-600 transition">Directions</a>
+                <a href="#reviews" class="sidebar-link hover:text-amber-600 transition">Reviews</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 bg-amber-50 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="reveal active">
+                    <nav class="flex mb-6 text-sm font-medium text-amber-600" aria-label="Breadcrumb">
+                        <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                            <li class="inline-flex items-center">
+                                <a href="./" class="hover:underline">Home</a>
+                            </li>
+                            <li>
+                                <div class="flex items-center">
+                                    <i class="fas fa-chevron-right text-[10px] mx-2 text-slate-400"></i>
+                                    <span class="text-slate-500">Recipes</span>
+                                </div>
+                            </li>
+                        </ol>
+                    </nav>
+
+                    <h1 class="title-font text-5xl md:text-6xl font-bold text-slate-900 leading-tight">
+                        Lemon Meringue <br>
+                        <span class="text-amber-500">Masterpiece</span>
+                    </h1>
+
+                    <p class="mt-6 text-lg text-slate-600 max-w-lg">
+                        Our most celebrated recipe: a perfect harmony of tart citrus curd 
+                        and cloud-like sweet meringue atop a buttery, flaky crust.
+                    </p>
+
+                    <div class="mt-10 flex flex-wrap gap-8 items-center">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600">
+                                <i class="far fa-clock"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs text-slate-400 uppercase font-bold tracking-wider">Prep Time</p>
+                                <p class="font-bold text-slate-700">45 Mins</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600">
+                                <i class="fas fa-utensils"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs text-slate-400 uppercase font-bold tracking-wider">Servings</p>
+                                <p class="font-bold text-slate-700">8 People</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs text-slate-400 uppercase font-bold tracking-wider">Rating</p>
+                                <p class="font-bold text-slate-700">4.9 / 5.0</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative reveal active delay-200">
+                    <div class="absolute -inset-4 bg-amber-200/50 rounded-[2rem] blur-2xl -z-10"></div>
+                    <div class="rounded-3xl shadow-2xl border-8 border-white skeleton aspect-[4/3] overflow-hidden">
+                        <img
+                            src="https://images.unsplash.com/photo-1535920527002-b35e96722eb9?auto=format&fit=crop&w=1200&q=80"
+                            class="h-full w-full object-cover img-hide"
+                            onload="this.classList.add('img-show'); this.parentElement.classList.remove('skeleton');"
+                            alt="Lemon Meringue Pie">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recipe Content -->
+    <section class="py-24 bg-white overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid lg:grid-cols-3 gap-16">
+                
+                <!-- Ingredients -->
+                <div id="ingredients" class="lg:col-span-3 reveal">
+                    <div class="bg-amber-50/50 rounded-3xl p-8 md:p-12 border border-amber-100 shadow-sm">
+                        <div class="flex items-center gap-4 mb-10">
+                            <div class="w-12 h-12 rounded-2xl bg-amber-500 flex items-center justify-center text-white shadow-lg">
+                                <i class="fas fa-shopping-basket text-xl"></i>
+                            </div>
+                            <h2 class="title-font text-4xl font-bold text-slate-900">
+                                The Ingredients
+                            </h2>
+                        </div>
+                        
+                        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            <!-- Category: The Crust -->
+                            <div class="space-y-6">
+                                <h3 class="text-amber-600 font-bold uppercase tracking-widest text-sm border-b border-amber-200 pb-2">The Foundation</h3>
+                                <ul class="space-y-4">
+                                    <li class="reveal delay-100">
+                                        <div class="flex items-start gap-3">
+                                            <span class="text-amber-500 mt-1"><i class="fas fa-check-circle"></i></span>
+                                            <div>
+                                                <p class="font-bold text-slate-800">1 Pre-baked 9-inch Crust</p>
+                                                <p class="text-xs text-slate-500 mt-1">Shortcrust or graham cracker for the perfect snap.</p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <!-- Category: The Filling -->
+                            <div class="space-y-6">
+                                <h3 class="text-amber-600 font-bold uppercase tracking-widest text-sm border-b border-amber-200 pb-2">Lemon Curd Filling</h3>
+                                <ul class="space-y-4">
+                                    <li class="reveal delay-100">
+                                        <div class="flex items-start gap-3">
+                                            <span class="text-amber-500 mt-1"><i class="fas fa-check-circle"></i></span>
+                                            <div>
+                                                <p class="font-bold text-slate-800">1 cup White Sugar</p>
+                                                <p class="text-xs text-slate-500 mt-1">Granulated sugar provides the base sweetness.</p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="reveal delay-200">
+                                        <div class="flex items-start gap-3">
+                                            <span class="text-amber-500 mt-1"><i class="fas fa-check-circle"></i></span>
+                                            <div>
+                                                <p class="font-bold text-slate-800">3 tbsp Cornstarch</p>
+                                                <p class="text-xs text-slate-500 mt-1">The essential thickening agent for a firm slice.</p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="reveal delay-300">
+                                        <div class="flex items-start gap-3">
+                                            <span class="text-amber-500 mt-1"><i class="fas fa-check-circle"></i></span>
+                                            <div>
+                                                <p class="font-bold text-slate-800">1 1/2 cups Water</p>
+                                                <p class="text-xs text-slate-500 mt-1">Filtered water to carry the citrus notes.</p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="reveal delay-400">
+                                        <div class="flex items-start gap-3">
+                                            <span class="text-amber-500 mt-1"><i class="fas fa-check-circle"></i></span>
+                                            <div>
+                                                <p class="font-bold text-slate-800">2 Large Lemons</p>
+                                                <p class="text-xs text-slate-500 mt-1">Both zest and juice for an intense, tart kick.</p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="reveal delay-500">
+                                        <div class="flex items-start gap-3">
+                                            <span class="text-amber-500 mt-1"><i class="fas fa-check-circle"></i></span>
+                                            <div>
+                                                <p class="font-bold text-slate-800">3 Egg Yolks</p>
+                                                <p class="text-xs text-slate-500 mt-1">Beaten well to add richness and deep golden color.</p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="reveal delay-600">
+                                        <div class="flex items-start gap-3">
+                                            <span class="text-amber-500 mt-1"><i class="fas fa-check-circle"></i></span>
+                                            <div>
+                                                <p class="font-bold text-slate-800">1 tbsp Butter</p>
+                                                <p class="text-xs text-slate-500 mt-1">Unsalted butter adds a silky, professional finish.</p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <!-- Category: The Meringue -->
+                            <div class="space-y-6">
+                                <h3 class="text-amber-600 font-bold uppercase tracking-widest text-sm border-b border-amber-200 pb-2">The Meringue Topping</h3>
+                                <ul class="space-y-4">
+                                    <li class="reveal delay-100">
+                                        <div class="flex items-start gap-3">
+                                            <span class="text-amber-500 mt-1"><i class="fas fa-check-circle"></i></span>
+                                            <div>
+                                                <p class="font-bold text-slate-800">3 Egg Whites</p>
+                                                <p class="text-xs text-slate-500 mt-1">Room temperature whites for maximum volume.</p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="reveal delay-200">
+                                        <div class="flex items-start gap-3">
+                                            <span class="text-amber-500 mt-1"><i class="fas fa-check-circle"></i></span>
+                                            <div>
+                                                <p class="font-bold text-slate-800">6 tbsp Sugar</p>
+                                                <p class="text-xs text-slate-500 mt-1">Added slowly to create stable, glossy peaks.</p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="reveal delay-300">
+                                        <div class="flex items-start gap-3">
+                                            <span class="text-amber-500 mt-1"><i class="fas fa-check-circle"></i></span>
+                                            <div>
+                                                <p class="font-bold text-slate-800">1/4 tsp Cream of Tartar</p>
+                                                <p class="text-xs text-slate-500 mt-1">The secret to a meringue that never collapses.</p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="reveal delay-400">
+                                        <div class="flex items-start gap-3">
+                                            <span class="text-amber-500 mt-1"><i class="fas fa-check-circle"></i></span>
+                                            <div>
+                                                <p class="font-bold text-slate-800">1/2 tsp Vanilla</p>
+                                                <p class="text-xs text-slate-500 mt-1">A hint of aroma to balance the sweet clouds.</p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Directions -->
+                <div id="steps" class="lg:col-span-3 reveal">
+                    <h2 class="title-font text-3xl font-bold text-slate-900 mb-8 pb-4 border-b-2 border-amber-500 inline-block">
+                        Instructions
+                    </h2>
+
+                    <div class="space-y-12">
+                        <!-- Step 1 -->
+                        <div class="flex gap-6 group reveal">
+                            <div class="flex-shrink-0 w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-bold text-xl group-hover:bg-amber-500 transition shadow-lg">
+                                01
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-900 mb-3">Prepare Filling Base</h3>
+                                <p class="text-slate-600 leading-relaxed">
+                                    In a medium saucepan, whisk together sugar, flour, cornstarch, and salt. 
+                                    Stir in water, lemon juice, and lemon zest. Cook over medium-high heat, 
+                                    stirring constantly, until mixture comes to a boil.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div class="flex gap-6 group reveal">
+                            <div class="flex-shrink-0 w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-bold text-xl group-hover:bg-amber-500 transition shadow-lg">
+                                02
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-900 mb-3">Tempering & Thickening</h3>
+                                <p class="text-slate-600 leading-relaxed">
+                                    Stir in butter. Place egg yolks in a small bowl and gradually whisk in 
+                                    about 1/2 cup of hot sugar mixture. Whisk egg yolk mixture back into 
+                                    remaining sugar mixture. Bring to a boil and continue to cook while 
+                                    stirring constantly until thick.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Reviews Section -->
+    <section id="reviews" class="py-24 bg-slate-50 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16 reveal">
+                <h2 class="title-font text-4xl font-bold text-slate-900">What Bakers Are Saying</h2>
+                <p class="text-slate-500 mt-4">Join thousands who have mastered Granny's recipe</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 reveal">
+                    <div class="flex text-amber-400 mb-4">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-slate-600 italic">"The lemon curd is perfectly tart. This was my first time making meringue and it came out perfectly thanks to these steps!"</p>
+                    <div class="mt-6 flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full skeleton overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80" 
+                                class="w-full h-full object-cover shadow-md border-2 border-amber-500 img-hide"
+                                onload="this.classList.add('img-show'); this.parentElement.classList.remove('skeleton');">
+                        </div>
+                        <div>
+                            <p class="font-bold text-slate-900">Sarah Jenkins</p>
+                            <p class="text-xs text-slate-400">Home Baker</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 reveal delay-100">
+                    <div class="flex text-amber-400 mb-4">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-slate-600 italic">"Finally found a recipe that doesn't result in a soggy bottom! The crust stays crisp and the filling is heaven."</p>
+                    <div class="mt-6 flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full skeleton overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" 
+                                class="w-full h-full object-cover shadow-md border-2 border-amber-500 img-hide"
+                                onload="this.classList.add('img-show'); this.parentElement.classList.remove('skeleton');">
+                        </div>
+                        <div>
+                            <p class="font-bold text-slate-900">Michael Ross</p>
+                            <p class="text-xs text-slate-400">Pastry Enthusiast</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 reveal delay-200">
+                    <div class="flex text-amber-400 mb-4">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <p class="text-slate-600 italic">"A classic for a reason. Granny really knows her stuff. Best Lemon Meringue pie I've ever had, period."</p>
+                    <div class="mt-6 flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full skeleton overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=150&q=80" 
+                                class="w-full h-full object-cover shadow-md border-2 border-amber-500 img-hide"
+                                onload="this.classList.add('img-show'); this.parentElement.classList.remove('skeleton');">
+                        </div>
+                        <div>
+                            <p class="font-bold text-slate-900">Emma Thompson</p>
+                            <p class="text-xs text-slate-400">Culinary Blogger</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-3 gap-10 text-center md:text-left">
+                <div>
+                    <h3 class="title-font text-3xl mb-4 text-amber-500">
+                        Granny's Pies
+                    </h3>
+                    <p class="text-slate-400">
+                        Hand-me-down recipes for the modern kitchen.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Explore</h4>
+                    <div class="space-y-2">
+                        <a href="./" class="block hover:text-amber-400">Home</a>
+                        <a href="#ingredients" class="block hover:text-amber-400">Ingredients</a>
+                        <a href="#steps" class="block hover:text-amber-400">Directions</a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Community</h4>
+                    <div class="flex justify-center md:justify-start gap-4 text-2xl">
+                        <i class="fab fa-facebook hover:text-amber-500 cursor-pointer"></i>
+                        <i class="fab fa-instagram hover:text-amber-500 cursor-pointer"></i>
+                        <i class="fab fa-pinterest hover:text-amber-500 cursor-pointer"></i>
+                    </div>
+                </div>
+            </div>
+            <hr class="border-slate-700 my-8">
+            <p class="text-center text-slate-500 text-sm">
+                © 2026 Granny's Pies. All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Scroll Progress Bar
+        window.onscroll = function() {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("scroll-progress").style.width = scrolled + "%";
+
+            // Navbar Transformation
+            const nav = document.getElementById('main-nav');
+            if (winScroll > 50) {
+                nav.classList.add('bg-white/95', 'shadow-md', 'py-2');
+                nav.classList.remove('bg-white/90', 'py-4');
+            } else {
+                nav.classList.add('bg-white/90', 'py-4');
+                nav.classList.remove('bg-white/95', 'shadow-md', 'py-2');
+            }
+        };
+
+        // Scroll Reveal Observer
+        const revealCallback = (entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                } else {
+                    entry.target.classList.remove('active');
+                }
+            });
+        };
+
+        const revealObserver = new IntersectionObserver(revealCallback, {
+            threshold: 0.1
+        });
+
+        document.querySelectorAll('.reveal').forEach(el => {
+            revealObserver.observe(el);
+        });
+
+        // Mobile Sidebar Logic
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileSidebar = document.getElementById('mobile-sidebar');
+        const sidebarContent = document.getElementById('sidebar-content');
+        const closeSidebarBtn = document.getElementById('close-sidebar');
+        const sidebarLinks = document.querySelectorAll('.sidebar-link');
+
+        function toggleSidebar() {
+            const isHidden = mobileSidebar.classList.contains('hidden');
+            if (isHidden) {
+                mobileSidebar.classList.remove('hidden');
+                setTimeout(() => {
+                    sidebarContent.classList.remove('translate-x-full');
+                }, 10);
+            } else {
+                sidebarContent.classList.add('translate-x-full');
+                setTimeout(() => {
+                    mobileSidebar.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        mobileMenuBtn.addEventListener('click', toggleSidebar);
+        closeSidebarBtn.addEventListener('click', toggleSidebar);
+        mobileSidebar.addEventListener('click', (e) => {
+            if (e.target === mobileSidebar) toggleSidebar();
+        });
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', toggleSidebar);
+        });
+    </script>
+</body>
+</html>

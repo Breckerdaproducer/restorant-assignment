@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Granny's Pies | Homemade Happiness</title>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        body{
+            font-family:'Inter',sans-serif;
+            overflow-x: hidden;
+        }
+
+        .title-font{
+            font-family:'Playfair Display',serif;
+        }
+
+        .hero-bg{
+            background:
+            linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.55)),
+            url('https://images.unsplash.com/photo-1519915028121-7d3463d20b13?auto=format&fit=crop&w=1600&q=80');
+            background-size:cover;
+            background-position:center;
+            background-attachment: fixed;
+        }
+
+        .glass{
+            backdrop-filter: blur(15px);
+            background: rgba(255,255,255,0.08);
+        }
+
+        /* Scroll Progress Bar */
+        #scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: #f59e0b;
+            z-index: 100;
+            transition: width 0.1s ease-out;
+        }
+
+        /* Custom Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1s cubic-bezier(0.17, 0.55, 0.55, 1);
+            will-change: opacity, transform;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Delay utilities for staggered reveals */
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+        .delay-400 { transition-delay: 400ms; }
+
+        .navbar-scrolled {
+            @apply py-3 bg-white/95 shadow-md border-b border-amber-100;
+        }
+
+        /* Image Skeleton Loading */
+        .skeleton {
+            position: relative;
+            overflow: hidden;
+            background-color: #e2e8f0;
+        }
+
+        .skeleton::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            transform: translateX(-100%);
+            background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0) 0,
+                rgba(255, 255, 255, 0.2) 20%,
+                rgba(255, 255, 255, 0.5) 60%,
+                rgba(255, 255, 255, 0)
+            );
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        .img-hide {
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .img-show {
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-700">
+
+    <div id="scroll-progress"></div>
+
+    <!-- Navbar -->
+    <nav id="main-nav" class="fixed top-0 left-0 w-full z-50 bg-white/90 backdrop-blur-lg shadow-sm transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center transition-all duration-300" id="nav-container">
+
+            <div class="flex items-center gap-3">
+                <img src="assets/logo.svg" alt="Granny's Pies Logo" class="w-14 h-14 drop-shadow-md">
+                <div>
+                    <h2 class="title-font text-2xl font-bold text-amber-600 leading-none">
+                        Granny's Pies
+                    </h2>
+                    <span class="text-[10px] uppercase tracking-[0.2em] text-slate-400 font-bold">Homemade Excellence</span>
+                </div>
+            </div>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex gap-8 font-medium">
+                <a href="#" class="hover:text-amber-600 transition">Home</a>
+                <a href="#specialties" class="hover:text-amber-600 transition">Pies</a>
+                <a href="#contact" class="hover:text-amber-600 transition">Contact</a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-btn" class="md:hidden text-2xl text-slate-700 focus:outline-none">
+                <i class="fas fa-bars"></i>
+            </button>
+
+        </div>
+    </nav>
+
+    <!-- Mobile Sidebar -->
+    <div id="mobile-sidebar" class="fixed inset-0 z-[60] bg-slate-900/50 backdrop-blur-sm hidden">
+        <div class="fixed right-0 top-0 h-full w-64 bg-white shadow-2xl p-6 transition-transform transform translate-x-full" id="sidebar-content">
+            <div class="flex justify-between items-center mb-10">
+                <h3 class="title-font text-xl font-bold text-amber-600">Menu</h3>
+                <button id="close-sidebar" class="text-2xl text-slate-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="flex flex-col gap-6 font-medium">
+                <a href="#" class="sidebar-link hover:text-amber-600 transition">Home</a>
+                <a href="#specialties" class="sidebar-link hover:text-amber-600 transition">Pies</a>
+                <a href="#contact" class="sidebar-link hover:text-amber-600 transition">Contact</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero -->
+    <section class="hero-bg min-h-screen flex items-center overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 w-full">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="text-white reveal active">
+                    <span class="bg-amber-500 px-4 py-2 rounded-full text-sm font-semibold inline-block">
+                        Since 1952 • Handmade Recipes
+                    </span>
+
+                    <h1 class="title-font text-5xl md:text-7xl font-bold mt-8 leading-tight">
+                        Homemade Pies
+                        <span class="text-amber-400">Made With Love</span>
+                    </h1>
+
+                    <p class="text-lg text-gray-200 mt-6 max-w-xl">
+                        Discover traditional family recipes crafted with fresh
+                        ingredients, rich flavors and generations of baking
+                        excellence.
+                    </p>
+
+                    <div class="flex flex-wrap gap-4 mt-10">
+                        <a href="pie.html"
+                            class="bg-amber-500 hover:bg-amber-600 px-8 py-4 rounded-xl font-semibold transition shadow-lg">
+                            View Lemon Pie Recipe
+                        </a>
+                        <a href="#specialties"
+                            class="glass px-8 py-4 rounded-xl border border-white/20 hover:bg-white/10 transition">
+                            Explore Menu
+                        </a>
+                    </div>
+                </div>
+
+                <div class="hidden lg:block reveal active delay-200">
+                    <div class="glass rounded-3xl h-[600px] p-6 border border-white/10 skeleton">
+                        <img
+                        src="https://images.unsplash.com/photo-1535920527002-b35e96722eb9?auto=format&fit=crop&w=900&q=80"
+                        class="rounded-2xl h-full w-full object-cover shadow-2xl img-hide"
+                        onload="this.classList.add('img-show'); this.parentElement.classList.remove('skeleton');"
+                        alt="Pie">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="py-20 bg-white">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div class="text-center reveal">
+                    <h3 class="text-4xl font-bold text-amber-600">70+</h3>
+                    <p>Years Experience</p>
+                </div>
+                <div class="text-center reveal delay-100">
+                    <h3 class="text-4xl font-bold text-amber-600">25+</h3>
+                    <p>Pie Varieties</p>
+                </div>
+                <div class="text-center reveal delay-200">
+                    <h3 class="text-4xl font-bold text-amber-600">10k+</h3>
+                    <p>Happy Customers</p>
+                </div>
+                <div class="text-center reveal delay-300">
+                    <h3 class="text-4xl font-bold text-amber-600">100%</h3>
+                    <p>Fresh Ingredients</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Specialties -->
+    <section id="specialties" class="py-24">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16 reveal">
+                <h2 class="title-font text-5xl font-bold text-slate-800">
+                    Signature Pies
+                </h2>
+                <p class="mt-4 text-slate-500">
+                    Crafted using time-tested family recipes
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="bg-white rounded-3xl overflow-hidden shadow-xl hover:-translate-y-2 transition reveal">
+                    <div class="h-64 w-full skeleton">
+                        <img
+                        src="https://images.unsplash.com/photo-1519869325930-281384150729?auto=format&fit=crop&w=900&q=80"
+                        class="h-full w-full object-cover img-hide"
+                        onload="this.classList.add('img-show'); this.parentElement.classList.remove('skeleton');">
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-2xl font-bold mb-3">
+                            Lemon Meringue Pie
+                        </h3>
+                        <p class="text-slate-500">
+                            Tangy lemon filling topped with fluffy golden meringue.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-white rounded-3xl overflow-hidden shadow-xl hover:-translate-y-2 transition reveal delay-100">
+                    <div class="h-64 w-full skeleton">
+                        <img
+                        src="https://images.unsplash.com/photo-1562007908-17c67e878c88?auto=format&fit=crop&w=900&q=80"
+                        class="h-full w-full object-cover img-hide"
+                        onload="this.classList.add('img-show'); this.parentElement.classList.remove('skeleton');">
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-2xl font-bold mb-3">
+                            Apple Cinnamon Pie
+                        </h3>
+                        <p class="text-slate-500">
+                            Classic apples baked with cinnamon and flaky crust.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-white rounded-3xl overflow-hidden shadow-xl hover:-translate-y-2 transition reveal delay-200">
+                    <div class="h-64 w-full skeleton">
+                        <img
+                        src="https://images.unsplash.com/photo-1464306076886-da185f6a9d05?auto=format&fit=crop&w=900&q=80"
+                        class="h-full w-full object-cover img-hide"
+                        onload="this.classList.add('img-show'); this.parentElement.classList.remove('skeleton');">
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-2xl font-bold mb-3">
+                            Berry Delight Pie
+                        </h3>
+                        <p class="text-slate-500">
+                            Mixed berries bursting with flavor in every slice.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials (Restore this section) -->
+    <section class="py-24 bg-slate-50 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16 reveal">
+                <h2 class="title-font text-5xl font-bold text-slate-800">Baker's Love</h2>
+                <p class="text-slate-500 mt-4">Real stories from our pie-loving community</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-3xl shadow-lg border border-slate-100 reveal" >
+                    <div class="flex text-amber-400 mb-6">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-slate-600 italic leading-relaxed">"These recipes changed my weekend baking forever. The Lemon Meringue is a absolute hit at every family dinner!"</p>
+                    <div class="mt-8 flex items-center gap-4">
+                        <div class="w-14 h-14 rounded-full skeleton">
+                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80" 
+                                class="w-full h-full rounded-full object-cover border-2 border-amber-500 shadow-md img-hide"
+                                onload="this.classList.add('img-show'); this.parentElement.classList.remove('skeleton');">
+                        </div>
+                        <div>
+                            <p class="font-bold text-slate-900">Sarah Jenkins</p>
+                            <p class="text-xs text-slate-400 uppercase tracking-widest">Master Baker</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-8 rounded-3xl shadow-lg border border-slate-100 reveal delay-100">
+                    <div class="flex text-amber-400 mb-6">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-slate-600 italic leading-relaxed">"I've tried many apple pie recipes, but Granny's secret crust technique is unmatched. Simply the best I've ever had."</p>
+                    <div class="mt-8 flex items-center gap-4">
+                        <div class="w-14 h-14 rounded-full skeleton">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" 
+                                class="w-full h-full rounded-full object-cover border-2 border-amber-500 shadow-md img-hide"
+                                onload="this.classList.add('img-show'); this.parentElement.classList.remove('skeleton');">
+                        </div>
+                        <div>
+                            <p class="font-bold text-slate-900">Michael Ross</p>
+                            <p class="text-xs text-slate-400 uppercase tracking-widest">Pastry Lover</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-8 rounded-3xl shadow-lg border border-slate-100 reveal delay-200">
+                    <div class="flex text-amber-400 mb-6">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <p class="text-slate-600 italic leading-relaxed">"The Berry Delight is my children's favorite. It's so easy to follow and the results are consistently amazing every time."</p>
+                    <div class="mt-8 flex items-center gap-4">
+                        <div class="w-14 h-14 rounded-full skeleton">
+                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=150&q=80" 
+                                class="w-full h-full rounded-full object-cover border-2 border-amber-500 shadow-md img-hide"
+                                onload="this.classList.add('img-show'); this.parentElement.classList.remove('skeleton');">
+                        </div>
+                        <div>
+                            <p class="font-bold text-slate-900">Emma Thompson</p>
+                            <p class="text-xs text-slate-400 uppercase tracking-widest">Home Cook</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="py-24 bg-amber-500 text-white reveal">
+        <div class="max-w-5xl mx-auto text-center px-6">
+            <h2 class="title-font text-5xl font-bold">Ready To Bake?</h2>
+            <p class="mt-6 text-xl">Follow our famous Lemon Meringue Pie recipe and create something unforgettable.</p>
+            <a href="pie.html" class="inline-block mt-8 bg-white text-amber-600 px-8 py-4 rounded-xl font-bold shadow-lg hover:scale-105 transition">Open Recipe</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="bg-slate-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-3 gap-10">
+                <div>
+                    <h3 class="title-font text-3xl mb-4">Granny's Pies</h3>
+                    <p class="text-slate-400">Bringing warmth and tradition to every table.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Quick Links</h4>
+                    <div class="space-y-2">
+                        <a href="pie.html" class="block hover:text-amber-400">Lemon Recipe</a>
+                        <a href="#" class="block hover:text-amber-400">Gallery</a>
+                        <a href="#" class="block hover:text-amber-400">Contact</a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Follow Us</h4>
+                    <div class="flex gap-4 text-2xl">
+                        <i class="fab fa-facebook hover:text-amber-500 cursor-pointer"></i>
+                        <i class="fab fa-instagram hover:text-amber-500 cursor-pointer"></i>
+                        <i class="fab fa-x-twitter hover:text-amber-500 cursor-pointer"></i>
+                        <i class="fab fa-pinterest hover:text-amber-500 cursor-pointer"></i>
+                    </div>
+                </div>
+            </div>
+            <hr class="border-slate-700 my-8">
+            <p class="text-center text-slate-500">© 2026 Granny's Pies. Crafted with ❤️ and Tailwind CSS.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Scroll Progress Bar
+        window.onscroll = function() {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("scroll-progress").style.width = scrolled + "%";
+
+            // Navbar Transformation
+            const nav = document.getElementById('main-nav');
+            const navContainer = document.getElementById('nav-container');
+            if (winScroll > 50) {
+                nav.classList.add('bg-white/95', 'shadow-md', 'py-2');
+                nav.classList.remove('bg-white/90', 'py-4');
+            } else {
+                nav.classList.add('bg-white/90', 'py-4');
+                nav.classList.remove('bg-white/95', 'shadow-md', 'py-2');
+            }
+        };
+
+        // Scroll Reveal Observer
+        const revealCallback = (entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    // observer.unobserve(entry.target); // Keep observing if we want out-effects
+                } else {
+                    entry.target.classList.remove('active'); // Fade out when leaving view
+                }
+            });
+        };
+
+        const revealObserver = new IntersectionObserver(revealCallback, {
+            threshold: 0.15
+        });
+
+        document.querySelectorAll('.reveal').forEach(el => {
+            revealObserver.observe(el);
+        });
+
+        // Mobile Sidebar Logic
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileSidebar = document.getElementById('mobile-sidebar');
+        const sidebarContent = document.getElementById('sidebar-content');
+        const closeSidebarBtn = document.getElementById('close-sidebar');
+        const sidebarLinks = document.querySelectorAll('.sidebar-link');
+
+        function toggleSidebar() {
+            const isHidden = mobileSidebar.classList.contains('hidden');
+            if (isHidden) {
+                mobileSidebar.classList.remove('hidden');
+                setTimeout(() => {
+                    sidebarContent.classList.remove('translate-x-full');
+                }, 10);
+            } else {
+                sidebarContent.classList.add('translate-x-full');
+                setTimeout(() => {
+                    mobileSidebar.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        mobileMenuBtn.addEventListener('click', toggleSidebar);
+        closeSidebarBtn.addEventListener('click', toggleSidebar);
+        mobileSidebar.addEventListener('click', (e) => {
+            if (e.target === mobileSidebar) toggleSidebar();
+        });
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', toggleSidebar);
+        });
+    </script>
+</body>
+</html>
