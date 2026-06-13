@@ -184,11 +184,11 @@
                     </nav>
 
                     <h1 class="title-font text-5xl md:text-6xl font-bold text-slate-900 leading-tight">
-                        Lemon Meringue <br>
-                        <span class="text-amber-500">Masterpiece</span>
+                        <span id="pie-title">Lemon Meringue</span> <br>
+                        <span id="pie-subtitle" class="text-amber-500">Masterpiece</span>
                     </h1>
 
-                    <p class="mt-6 text-lg text-slate-600 max-w-lg">
+                    <p id="pie-description" class="mt-6 text-lg text-slate-600 max-w-lg">
                         Our most celebrated recipe: a perfect harmony of tart citrus curd 
                         and cloud-like sweet meringue atop a buttery, flaky crust.
                     </p>
@@ -200,7 +200,7 @@
                             </div>
                             <div>
                                 <p class="text-xs text-slate-400 uppercase font-bold tracking-wider">Prep Time</p>
-                                <p class="font-bold text-slate-700">45 Mins</p>
+                                <p id="prep-time" class="font-bold text-slate-700">45 Mins</p>
                             </div>
                         </div>
                         <div class="flex items-center gap-3">
@@ -209,7 +209,7 @@
                             </div>
                             <div>
                                 <p class="text-xs text-slate-400 uppercase font-bold tracking-wider">Servings</p>
-                                <p class="font-bold text-slate-700">8 People</p>
+                                <p id="servings" class="font-bold text-slate-700">8 People</p>
                             </div>
                         </div>
                         <div class="flex items-center gap-3">
@@ -218,7 +218,7 @@
                             </div>
                             <div>
                                 <p class="text-xs text-slate-400 uppercase font-bold tracking-wider">Rating</p>
-                                <p class="font-bold text-slate-700">4.9 / 5.0</p>
+                                <p id="rating" class="font-bold text-slate-700">4.9 / 5.0</p>
                             </div>
                         </div>
                     </div>
@@ -228,10 +228,11 @@
                     <div class="absolute -inset-4 bg-amber-200/50 rounded-[2rem] blur-2xl -z-10"></div>
                     <div class="rounded-3xl shadow-2xl border-8 border-white skeleton aspect-[4/3] overflow-hidden">
                         <img
+                            id="hero-image"
                             src="https://images.unsplash.com/photo-1583350229873-e06b12acdb9c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8TGVtb24lMjBNZXJpbmd1ZSUyMFBpZXxlbnwwfHwwfHx8MA%3D%3D"
                             class="h-full w-full object-cover img-hide"
                             onload="this.classList.add('img-show'); this.parentElement.classList.remove('skeleton');"
-                            alt="Lemon Meringue Pie">
+                            alt="Pie Image">
                     </div>
                 </div>
             </div>
@@ -255,7 +256,7 @@
                             </h2>
                         </div>
                         
-                        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div id="ingredients-container" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                             <!-- Category: The Crust -->
                             <div class="space-y-6">
                                 <h3 class="text-amber-600 font-bold uppercase tracking-widest text-sm border-b border-amber-200 pb-2">The Foundation</h3>
@@ -385,7 +386,7 @@
                         Instructions
                     </h2>
 
-                    <div class="space-y-12">
+                    <div id="steps-container" class="space-y-12">
                         <!-- Step 1 -->
                         <div class="flex gap-6 group reveal">
                             <div class="flex-shrink-0 w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-bold text-xl group-hover:bg-amber-500 transition shadow-lg">
@@ -431,7 +432,7 @@
                 <p class="text-slate-500 mt-4">Join thousands who have mastered Granny's recipe</p>
             </div>
 
-            <div class="grid md:grid-cols-3 gap-8">
+            <div id="reviews-container" class="grid md:grid-cols-3 gap-8">
                 <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 reveal">
                     <div class="flex text-amber-400 mb-4">
                         <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
@@ -526,6 +527,177 @@
     </footer>
 
     <script>
+        // Pie Data Object
+        const pieData = {
+            'lemon': {
+                title: 'Lemon Meringue',
+                subtitle: 'Masterpiece',
+                description: 'Our most celebrated recipe: a perfect harmony of tart citrus curd and cloud-like sweet meringue atop a buttery, flaky crust.',
+                image: 'https://images.unsplash.com/photo-1583350229873-e06b12acdb9c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8TGVtb24lMjBNZXJpbmd1ZSUyMFBpZXxlbnwwfHwwfHx8MA%3D%3D',
+                prep: '45 Mins',
+                servings: '8 People',
+                rating: '4.9 / 5.0',
+                ingredients: [
+                    { category: 'The Foundation', items: [{ name: '1 Pre-baked 9-inch Crust', note: 'Shortcrust or graham cracker for the perfect snap.' }] },
+                    { category: 'Lemon Curd Filling', items: [
+                        { name: '1 cup White Sugar', note: 'Granulated sugar provides the base sweetness.' },
+                        { name: '3 tbsp Cornstarch', note: 'The essential thickening agent for a firm slice.' },
+                        { name: '1 1/2 cups Water', note: 'Filtered water to carry the citrus notes.' },
+                        { name: '2 Large Lemons', note: 'Both zest and juice for an intense, tart kick.' },
+                        { name: '3 Egg Yolks', note: 'Beaten well to add richness and deep golden color.' },
+                        { name: '1 tbsp Butter', note: 'Unsalted butter adds a silky, professional finish.' }
+                    ]},
+                    { category: 'The Meringue Topping', items: [
+                        { name: '3 Egg Whites', note: 'Room temperature whites for maximum volume.' },
+                        { name: '6 tbsp Sugar', note: 'Added slowly to create stable, glossy peaks.' },
+                        { name: '1/4 tsp Cream of Tartar', note: 'The secret to a meringue that never collapses.' },
+                        { name: '1/2 tsp Vanilla', note: 'A hint of aroma to balance the sweet clouds.' }
+                    ]}
+                ],
+                steps: [
+                    { title: 'Prepare Filling Base', desc: 'In a medium saucepan, whisk together sugar, flour, cornstarch, and salt. Stir in water, lemon juice, and lemon zest. Cook over medium-high heat, stirring constantly, until mixture comes to a boil.' },
+                    { title: 'Tempering & Thickening', desc: 'Stir in butter. Place egg yolks in a small bowl and gradually whisk in about 1/2 cup of hot sugar mixture. Whisk egg yolk mixture back into remaining sugar mixture. Bring to a boil and continue to cook while stirring constantly until thick.' }
+                ],
+                reviews: [
+                    { name: 'Sarah Jenkins', role: 'Home Baker', text: '"The lemon curd is perfectly tart. This was my first time making meringue and it came out perfectly thanks to these steps!"', img: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80' },
+                    { name: 'Michael Ross', role: 'Pastry Enthusiast', text: '"Finally found a recipe that doesn\'t result in a soggy bottom! The crust stays crisp and the filling is heaven."', img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80' },
+                    { name: 'Emma Thompson', role: 'Culinary Blogger', text: '"A classic for a reason. Granny really knows her stuff. Best Lemon Meringue pie I\'ve ever had, period."', img: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=150&q=80' }
+                ]
+            },
+            'apple': {
+                title: 'Apple Cinnamon',
+                subtitle: 'Heritage Classic',
+                description: 'Warm, tender apples tossed in fragrant cinnamon and brown sugar, encased in Granny\'s legendary lattice crust.',
+                image: 'https://images.unsplash.com/photo-1621743478914-cc8a86d7e7b5?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8QXBwbGUlMjBDaW5uYW1vbiUyMFBpZXxlbnwwfHwwfHx8MA%3D%3D',
+                prep: '60 Mins',
+                servings: '10 People',
+                rating: '4.8 / 5.0',
+                ingredients: [
+                    { category: 'The Crust', items: [
+                        { name: '2 sets Pie Dough', note: 'Top and bottom crusts for the perfect lattice.' },
+                        { name: '1 tbsp Milk', note: 'For brushing the top to get a golden finish.' }
+                    ]},
+                    { category: 'Apple Filling', items: [
+                        { name: '6-8 Granny Smith Apples', note: 'Sliced thin for even baking and tart flavor.' },
+                        { name: '3/4 cup Brown Sugar', note: 'Adds a deep caramel-like sweetness.' },
+                        { name: '2 tsp Cinnamon', note: 'The soul of a classic apple pie.' },
+                        { name: '1/4 tsp Nutmeg', note: 'A hint of spice to elevate the apples.' },
+                        { name: '2 tbsp All-purpose Flour', note: 'Helps thicken the delicious apple juices.' }
+                    ]}
+                ],
+                steps: [
+                    { title: 'Prepare the Apples', desc: 'Peel, core, and slice apples. Toss with brown sugar, cinnamon, nutmeg, and flour in a large bowl. Let sit for 15 minutes to allow juices to release.' },
+                    { title: 'Assemble & Lattice', desc: 'Line your pie plate with the bottom crust. Pour in apple mixture. Cut second crust into strips and weave a lattice pattern over the top. Crimp edges to seal.' },
+                    { title: 'Bake to Golden', desc: 'Brush with milk and sprinkle with sugar. Bake at 425°F (220°C) for 15 mins, then reduce to 375°F (190°C) for 35-40 mins until crust is golden and filling is bubbling.' }
+                ],
+                reviews: [
+                    { name: 'David Miller', role: 'Grandpa', text: '"Reminds me exactly of the ones my mother used to bake. The cinnamon balance is spot on!"', img: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=150&q=80' },
+                    { name: 'Linda G.', role: 'Pie Lover', text: '"The lattice crust technique in the video was so helpful. Mine actually looked professional!"', img: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80' }
+                ]
+            },
+            'berry': {
+                title: 'Berry Delight',
+                subtitle: 'Summer Harvest',
+                description: 'A vibrant medley of blueberries, raspberries, and blackberries, slow-baked until bubbling and sweet.',
+                image: 'https://images.unsplash.com/photo-1772064945236-f02ced3a9b12?q=80&w=1026&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                prep: '50 Mins',
+                servings: '8 People',
+                rating: '4.7 / 5.0',
+                ingredients: [
+                    { category: 'The Foundation', items: [{ name: '1 Deep-dish Pie Crust', note: 'Extra space for all those juicy berries.' }] },
+                    { category: 'Mixed Berry Filling', items: [
+                        { name: '5 cups Mixed Berries', note: 'Blueberries, raspberries, and blackberries.' },
+                        { name: '1/2 cup White Sugar', note: 'Adjust based on the sweetness of your berries.' },
+                        { name: '1/4 cup Cornstarch', note: 'Crucial for setting the berry juices.' },
+                        { name: '1 tbsp Lemon Juice', note: 'Brightens the flavor of the fresh fruit.' }
+                    ]}
+                ],
+                steps: [
+                    { title: 'Mix Berries', desc: 'Gently toss the mixed berries with sugar, cornstarch, and lemon juice. Be careful not to crush the delicate raspberries.' },
+                    { title: 'Fill & Top', desc: 'Pour berry mixture into the pie crust. You can use a full top crust or a crumble topping made of oats, flour, and butter.' },
+                    { title: 'Bake Until Bubbly', desc: 'Bake at 375°F (190°C) for 45-50 minutes. The filling should be thick and bubbling through the top vents.' }
+                ],
+                reviews: [
+                    { name: 'Jessica K.', role: 'Fruit Fanatic', text: '"The combination of berries is amazing. Not too sweet, just perfect fruit flavor."', img: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&q=80' },
+                    { name: 'Tom H.', role: 'Weekend Baker', text: '"Made this for a summer BBQ and it was gone in minutes. Serve with vanilla ice cream!"', img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80' }
+                ]
+            }
+        };
+
+        // Get URL Parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const pieType = urlParams.get('pie') || 'lemon';
+        const data = pieData[pieType] || pieData['lemon'];
+
+        // Update Page Content
+        document.title = `${data.title} Pie | Granny's Pies`;
+        document.getElementById('pie-title').textContent = data.title;
+        document.getElementById('pie-subtitle').textContent = data.subtitle;
+        document.getElementById('pie-description').textContent = data.description;
+        document.getElementById('prep-time').textContent = data.prep;
+        document.getElementById('servings').textContent = data.servings;
+        document.getElementById('rating').textContent = data.rating;
+        
+        const heroImg = document.getElementById('hero-image');
+        heroImg.src = data.image;
+        heroImg.alt = `${data.title} Pie`;
+
+        // Update Ingredients
+        const ingredientsContainer = document.getElementById('ingredients-container');
+        ingredientsContainer.innerHTML = data.ingredients.map(cat => `
+            <div class="space-y-6">
+                <h3 class="text-amber-600 font-bold uppercase tracking-widest text-sm border-b border-amber-200 pb-2">${cat.category}</h3>
+                <ul class="space-y-4">
+                    ${cat.items.map((item, idx) => `
+                        <li class="reveal active" style="transition-delay: ${idx * 100}ms">
+                            <div class="flex items-start gap-3">
+                                <span class="text-amber-500 mt-1"><i class="fas fa-check-circle"></i></span>
+                                <div>
+                                    <p class="font-bold text-slate-800">${item.name}</p>
+                                    <p class="text-xs text-slate-500 mt-1">${item.note}</p>
+                                </div>
+                            </div>
+                        </li>
+                    `).join('')}
+                </ul>
+            </div>
+        `).join('');
+
+        // Update Steps
+        const stepsContainer = document.getElementById('steps-container');
+        stepsContainer.innerHTML = data.steps.map((step, idx) => `
+            <div class="flex gap-6 group reveal active" style="transition-delay: ${idx * 100}ms">
+                <div class="flex-shrink-0 w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-bold text-xl group-hover:bg-amber-500 transition shadow-lg">
+                    ${(idx + 1).toString().padStart(2, '0')}
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">${step.title}</h3>
+                    <p class="text-slate-600 leading-relaxed">${step.desc}</p>
+                </div>
+            </div>
+        `).join('');
+
+        // Update Reviews
+        const reviewsContainer = document.getElementById('reviews-container');
+        reviewsContainer.innerHTML = data.reviews.map((rev, idx) => `
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 reveal active" style="transition-delay: ${idx * 100}ms">
+                <div class="flex text-amber-400 mb-4">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                </div>
+                <p class="text-slate-600 italic">${rev.text}</p>
+                <div class="mt-6 flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full overflow-hidden">
+                        <img src="${rev.img}" 
+                            class="w-full h-full object-cover shadow-md border-2 border-amber-500">
+                    </div>
+                    <div>
+                        <p class="font-bold text-slate-900">${rev.name}</p>
+                        <p class="text-xs text-slate-400">${rev.role}</p>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+
         // Scroll Progress Bar
         window.onscroll = function() {
             let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
